@@ -1,5 +1,5 @@
 #add error handeling AKA what if no page tag are found, what if somethign is empty etc
-
+#use PyScript to connect it to html
 
 
 from bs4 import BeautifulSoup
@@ -65,7 +65,7 @@ doc2 = BeautifulSoup(request2, "html.parser")
 
 LinksList = []
 ProductsList = []
-Prcieslist = []
+Priceslist = []
 
 SortedList = []
 
@@ -106,13 +106,35 @@ for parent in all_pricesPARENT:
 
 #gets only the text from the strong tag
 #REMINDER FOR FUTURE: any tag "<strong>" is NOT treated as text as it is converted back into html before retrieving only the text, makming it back into a tag
-for strong in all_strong:
-    Prcieslist.append(strong.get_text())
-
+RawStrong = []
+for strongtag in all_strong:
+    RawStrong.append(strongtag.get_text())
+    for strong in RawStrong:
+        strong = strong.replace(',', '')
+        Priceslist.append(int(strong))
 
 
 # for every link ther eit, it will append the link, product, and price in a list within another list
 for x in range(len(LinksList)):
-    SortedList.append([LinksList[x], ProductsList[x], Prcieslist[x]])
+    SortedList.append([LinksList[x], ProductsList[x], Priceslist[x]])
+
+
+#sorts second index of sorted list
+#key = is a sort basis, Ex: if key = len, it would sort by length
+#lambda is an anonymous function, value is automatically returned at the end
+SortedList.sort(key=lambda x: x[2])
+
 
 print(SortedList)
+
+
+
+
+
+
+
+
+
+
+
+
