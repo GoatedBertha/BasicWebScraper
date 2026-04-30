@@ -9,6 +9,7 @@ import requests
 #^[A-Z]+$ will look for pattern that styarts with capital and ends with capital, has to occure once but may occure more
 import re
 
+
 user_input = input("What item are you looking for today?: ")
 
 #re.compile only makes the pattern to see, not extract
