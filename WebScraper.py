@@ -102,37 +102,36 @@ def FindPages(Doc, CodeBroke):
 def FindData(Doc, CodeBroke):
     if not CodeBroke:
 
-            #Claude solution, works but where did it get "item-cell"?????
-            # all_items = Doc.find_all(class_="item-cell")  # each product's wrapper div
+            items = Doc.find_all(class_="item-cell")
 
-            # for item in all_items:
-            #     # grab link, product, and price all from the same container
-            #     link_tag = item.find(class_="item-title")
-            #     price_tag = item.find(class_="price-current")
+            for item in items:
+                #looks for a tag that has an href
+                Link = (item.find('a')['href'])
+                #sets the product to be an <a> tag that has an href and that has specific class
+                Product = item.find('a', href=True, class_="item-title")
+                Product = Product.get_text()
+                PriceTag = item.find('li', class_="price-current")
+                Price = PriceTag.find('strong')
+                Price = Price.get_text()
+                Price = Price.replace(",","")
 
-            #     if link_tag and price_tag:
-            #         strong_tag = price_tag.find("strong")
-            #         if strong_tag:
-            #             price = int(strong_tag.get_text().replace(",", ""))
-            #             LinksList.append(link_tag["href"])
-            #             ProductsList.append(link_tag.get_text())
-            #             Priceslist.append(price)
+                UnsortedList =  []
+                UnsortedList.append(Link)
+                UnsortedList.append(Product)
+                UnsortedList.append(int(Price))
+
+                SortedList.append(UnsortedList)
+
+                
+            #sorts second index of sorted list
+            #key = is a sort basis, Ex: if key = len, it would sort by length
+            #lambda is an anonymous function, value is automatically returned at the end
+            PriceSortedList = sorted(SortedList, key=lambda x: x[2])
 
 
+    return SortedList, PriceSortedList
 
-            #prices broken, will try to recode later on
 
-
-        #sorts second index of sorted list
-        #key = is a sort basis, Ex: if key = len, it would sort by length
-        #lambda is an anonymous function, value is automatically returned at the end
-        PriceSortedList = sorted(SortedList, key=lambda x: x[2])
-
-        return LinksList, ProductsList, Priceslist, SortedList, PriceSortedList, None, None
-    else:
-        ReasonCodeBroke = "Did not execute, code is broken earlier!"
-        CodeBroke = True
-        return None, None, None, None, None, CodeBroke, ReasonCodeBroke
 
 
 
@@ -147,16 +146,13 @@ URL, StatusCode = MakeURL(BaseURL, Term, CurrentPage)
 
 Doc, CodeBroke, ReasonCodeBroke = GetRequest(URL, StatusCode)
 
-LinksList, ProductsList, Priceslist, SortedList, PriceSortedList, CodeBroke, ReasonCodeBroke = FindData(Doc, CodeBroke)
 
-# print(len(LinksList))
-# print(len(ProductsList))
-# print(len(Priceslist))
+SortedList, PriceSortedList = FindData(Doc, CodeBroke)
+print(SortedList)
+print()
+print()
+print()
+print(PriceSortedList)
 
 
 
-# print(SortedList)
-# print()
-# print()
-# print()
-# print(PriceSortedList)
